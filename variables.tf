@@ -156,6 +156,12 @@ variable "service_account_email" {
   description = "IAM service account email to assign to container instances."
 }
 
+variable "startup_cpu_boost" {
+  type        = bool
+  default     = false
+  description = "Start containers faster by allocating more CPU during start-up time."
+}
+
 variable "timeout" {
   type        = number
   default     = 60

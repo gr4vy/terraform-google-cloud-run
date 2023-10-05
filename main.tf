@@ -121,6 +121,7 @@ resource "google_cloud_run_service" "default" {
           "autoscaling.knative.dev/maxScale"         = var.max_instances
           "autoscaling.knative.dev/minScale"         = var.min_instances
           "run.googleapis.com/execution-environment" = var.execution_environment
+          "run.googleapis.com/startup-cpu-boost"     = var.startup_cpu_boost
         },
         local.vpc_access.connector == null ? {} : {
           "run.googleapis.com/vpc-access-connector" = local.vpc_access.connector
