@@ -4,7 +4,7 @@ output "name" {
 }
 
 output "image" {
-  value       = google_cloud_run_service.default.metadata[0].annotations["client.knative.dev/user-image"]
+  value       = google_cloud_run_service.default.template[0].spec[0].containers[0].image
   description = "Docker image name."
 }
 
