@@ -14,7 +14,6 @@ resource "google_cloud_run_service" "default" {
       "run.googleapis.com/launch-stage" = local.launch_stage
       "run.googleapis.com/ingress"      = var.ingress
       "run.googleapis.com/client-name"  = "terraform"
-      "client.knative.dev/user-image"   = var.image
     }
   }
 
@@ -29,6 +28,7 @@ resource "google_cloud_run_service" "default" {
       metadata[0].annotations["serving.knative.dev/lastModifier"],
       metadata[0].annotations["run.googleapis.com/ingress-status"],
       metadata[0].annotations["run.googleapis.com/launch-stage"],
+      metadata[0].annotations["client.knative.dev/user-image"],
       metadata[0].labels["cloud.googleapis.com/location"],
     ]
   }
