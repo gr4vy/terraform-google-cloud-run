@@ -24,6 +24,7 @@ resource "google_cloud_run_service" "default" {
       template[0].metadata[0].annotations["run.googleapis.com/client-name"],
       template[0].metadata[0].annotations["run.googleapis.com/client-version"],
       template[0].metadata[0].annotations["run.googleapis.com/sandbox"],
+      template[0].spec[0].containers[0].image,
       metadata[0].annotations["serving.knative.dev/creator"],
       metadata[0].annotations["serving.knative.dev/lastModifier"],
       metadata[0].annotations["run.googleapis.com/ingress-status"],
