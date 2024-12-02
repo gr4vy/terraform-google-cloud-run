@@ -169,13 +169,29 @@ variable "timeout" {
 }
 
 variable "volumes" {
-  type        = set(object({ path = string, secret = string, versions = optional(map(string)) }))
+  type = set(
+    object({
+      path            = string,
+      secret          = optional(string),
+      versions        = optional(map(string)),
+      gcs_bucket_name = optional(string),
+      gcs_read_only   = optional(bool),
+    })
+  )
   default     = []
-  description = "Volumes to be mounted & populated from secrets."
+  description = "Volumes to be mounted & populated from secrets or GCS."
 
   validation {
     error_message = "Multiple volumes for the same path can't be defined."
     condition     = length(tolist(var.volumes.*.path)) == length(toset(var.volumes.*.path))
+  }
+
+  validation {
+    error_message = "Volumes must have one of `gcs_bucket_name` or `secret` defined."
+    condition = alltrue([
+      length([for e in var.env : e if(e.gcs_bucket_name == null && e.secret == null)]) < 1,
+      length([for e in var.env : e if(e.gcs_bucket_name != null && e.secret != null)]) < 1,
+    ])
   }
 }
 

@@ -163,16 +163,28 @@ resource "google_cloud_run_service" "default" {
         content {
           name = volumes.value.name
 
-          secret {
-            secret_name = coalesce(volumes.value.secret.alias, volumes.value.secret.name)
+          dynamic "secret" {
+            for_each = volumes.value.secret != null ? [1] : []
+            content {
+              secret_name = coalesce(volumes.value.secret.alias, volumes.value.secret.name)
 
-            dynamic "items" {
-              for_each = volumes.value.items
+              dynamic "items" {
+                for_each = volumes.value.items
 
-              content {
-                key  = items.value.version
-                path = items.value.filename
+                content {
+                  key  = items.value.version
+                  path = items.value.filename
+                }
               }
+            }
+          }
+
+          dynamic "gcs" {
+            for_each = volumes.value.gcs_bucket_name != null ? [1] : []
+
+            content {
+              bucket    = volumes.value.gcs_bucket_name
+              read_only = volumes.value.gcs_read_only
             }
           }
         }

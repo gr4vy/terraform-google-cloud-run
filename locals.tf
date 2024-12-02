@@ -19,16 +19,18 @@ locals {
     for vol in var.volumes : {
       path = vol.path
       name = "volume-${substr(sha1(jsonencode(vol)), 0, 4)}"
-      secret = {
+      secret = vol.secret != null ? {
         name  = vol.secret
         alias = lookup(local.secrets_to_aliases, vol.secret, null)
-      }
+      } : null
       items = [
         for filename, version in coalesce(vol.versions, { latest = "latest" }) : {
           filename = filename,
           version  = version
         }
       ]
+      gcs_bucket_name = vol.gcs_bucket_name
+      gcs_read_only   = coalesce(vol.gcs_read_only, true)
     }
   ])
 
