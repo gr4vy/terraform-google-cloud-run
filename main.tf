@@ -58,7 +58,7 @@ resource "google_cloud_run_service" "default" {
 
         # Populate straight environment variables.
         dynamic "env" {
-          for_each = [for e in local.env : e if e.value != null]
+          for_each = { for i in [for e in local.env : e if e.value != null] : i.key => i }
 
           content {
             name  = env.value.key
@@ -68,7 +68,7 @@ resource "google_cloud_run_service" "default" {
 
         # Populate environment variables from secrets.
         dynamic "env" {
-          for_each = [for e in local.env : e if e.secret.name != null]
+          for_each = { for i in [for e in local.env : e if e.secret.name != null] : i.key => i }
 
           content {
             name = env.value.key
